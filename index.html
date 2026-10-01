@@ -1,0 +1,1811 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Instagram Unfollow Checker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Titan+One&display=swap" rel="stylesheet"> -->
+
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Rampart+One&display=swap" rel="stylesheet">
+     
+    <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Wendy+One&display=swap" rel="stylesheet">
+-->
+
+   <link href="https://fonts.googleapis.com/css2?family=Wendy+One&display=swap" rel="stylesheet">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+      :root {
+        --bg: #fde6f5;
+        --bg2: #e9defd;
+        --tx: #3a1f5c;
+        --mut: #7a5f9e;
+        --gl: rgba(255, 255, 255, 0.55);
+        --bd: rgba(255, 255, 255, 0.9);
+        --hi: rgba(255, 255, 255, 0.95);
+        --sh: rgba(165, 107, 255, 0.22);
+        --a: #ff6fc2;
+        --b: #9d6bff;
+        --c: #7fd6ff;
+        --d: #ffc857;
+        --ok: #2fb98a;
+        --er: #e5484d;
+        --ez: cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --bg: #1a0b33;
+          --bg2: #0f0a2e;
+          --tx: #f6eaff;
+          --mut: #bfa6e6;
+          --gl: rgba(255, 255, 255, 0.07);
+          --bd: rgba(214, 170, 255, 0.28);
+          --hi: rgba(255, 255, 255, 0.25);
+          --sh: rgba(0, 0, 0, 0.5);
+        }
+      }
+      :root[data-theme="dark"] {
+        --bg: #1a0b33;
+        --bg2: #0f0a2e;
+        --tx: #f6eaff;
+        --mut: #bfa6e6;
+        --gl: rgba(255, 255, 255, 0.07);
+        --bd: rgba(214, 170, 255, 0.28);
+        --hi: rgba(255, 255, 255, 0.25);
+        --sh: rgba(0, 0, 0, 0.5);
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+      html {
+        height: 100%;
+        scroll-behavior: smooth;
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: linear-gradient(160deg, var(--bg), var(--bg2)) fixed;
+        color: var(--tx);
+        font:
+          600 15px/1.55 "Quicksand",
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          sans-serif;
+        transition:
+          background 0.5s,
+          color 0.5s;
+        overflow-x: hidden;
+      }
+      .aur {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .aur > i {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(70px);
+        opacity: 0.5;
+        animation: dr 24s ease-in-out infinite alternate;
+      }
+      .aur > i:nth-child(1) {
+        width: 55vmax;
+        height: 55vmax;
+        background: var(--a);
+        left: -18vmax;
+        top: -18vmax;
+      }
+      .aur > i:nth-child(2) {
+        width: 48vmax;
+        height: 48vmax;
+        background: var(--b);
+        right: -14vmax;
+        top: 8vh;
+        animation-delay: -8s;
+      }
+      .aur > i:nth-child(3) {
+        width: 40vmax;
+        height: 40vmax;
+        background: var(--c);
+        left: 25vw;
+        bottom: -22vmax;
+        opacity: 0.3;
+        animation-delay: -14s;
+      }
+      @keyframes dr {
+        to {
+          transform: translate(7vmax, 5vmax) scale(1.12);
+        }
+      }
+      .tw {
+        position: absolute;
+        width: 9px;
+        height: 9px;
+        background: linear-gradient(135deg, #fff, var(--d));
+        clip-path: polygon(
+          50% 0,
+          62% 38%,
+          100% 50%,
+          62% 62%,
+          50% 100%,
+          38% 62%,
+          0 50%,
+          38% 38%
+        );
+        animation: tw 3.5s ease-in-out infinite;
+      }
+      @keyframes tw {
+        0%,
+        100% {
+          opacity: 0.15;
+          transform: scale(0.5);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.2) rotate(30deg);
+        }
+      }
+      .bf {
+        position: absolute;
+        width: var(--s);
+        animation: fly var(--t) ease-in-out infinite alternate;
+        opacity: 0.85;
+      }
+      .bf svg {
+        width: 100%;
+        display: block;
+        filter: drop-shadow(0 0 8px rgba(255, 111, 194, 0.6));
+      }
+      .bf .w {
+        transform-box: fill-box;
+        transform-origin: 100% 50%;
+        animation: fl 0.55s ease-in-out infinite alternate;
+      }
+      .bf .w.r {
+        transform-origin: 0 50%;
+      }
+      @keyframes fl {
+        to {
+          transform: scaleX(0.35);
+        }
+      }
+      @keyframes fly {
+        0% {
+          transform: translate(0, 0) rotate(8deg);
+        }
+        35% {
+          transform: translate(18vw, -14vh) rotate(-12deg);
+        }
+        70% {
+          transform: translate(34vw, 6vh) rotate(10deg);
+        }
+        100% {
+          transform: translate(52vw, -10vh) rotate(-6deg);
+        }
+      }
+      .sp {
+        position: fixed;
+        width: 9px;
+        height: 9px;
+        pointer-events: none;
+        z-index: 70;
+        background: linear-gradient(135deg, #fff, var(--d));
+        clip-path: polygon(
+          50% 0,
+          62% 38%,
+          100% 50%,
+          62% 62%,
+          50% 100%,
+          38% 62%,
+          0 50%,
+          38% 38%
+        );
+        animation: bst 0.7s ease-out forwards;
+      }
+      @keyframes bst {
+        from {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(0.4);
+        }
+        to {
+          opacity: 0;
+          transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y)))
+            scale(1.4) rotate(120deg);
+        }
+      }
+      .g {
+        position: relative;
+        background: var(--gl);
+        backdrop-filter: blur(22px) saturate(1.5);
+        -webkit-backdrop-filter: blur(22px) saturate(1.5);
+        border: 1px solid var(--bd);
+        border-radius: 26px;
+        box-shadow:
+          0 12px 40px var(--sh),
+          inset 0 1px 0 var(--hi);
+      }
+      .ic {
+        width: 20px;
+        height: 20px;
+        flex: none;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      :focus-visible {
+        outline: 2px solid var(--b);
+        outline-offset: 2px;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-height: 46px;
+        padding: 0 22px;
+        border-radius: 999px;
+        border: 1px solid var(--bd);
+        background: var(--gl);
+        backdrop-filter: blur(14px);
+        font-weight: 700;
+        text-decoration: none;
+        color: var(--tx);
+        box-shadow:
+          inset 0 1px 0 var(--hi),
+          0 6px 18px var(--sh);
+        transition:
+          transform 0.35s var(--ez),
+          box-shadow 0.3s,
+          filter 0.3s;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          inset 0 1px 0 var(--hi),
+          0 10px 26px var(--sh);
+      }
+      .btn:active {
+        transform: scale(0.94);
+        transition-duration: 0.12s;
+      }
+      .btn.p {
+        background: linear-gradient(135deg, var(--a), var(--b));
+        border-color: rgba(255, 255, 255, 0.55);
+        color: #fff;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.6),
+          0 8px 28px rgba(255, 111, 194, 0.5);
+      }
+      .btn.p:hover {
+        filter: brightness(1.06);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.6),
+          0 12px 34px rgba(255, 111, 194, 0.65);
+      }
+      .btn.sm {
+        min-height: 40px;
+        padding: 0 16px;
+        font-size: 13px;
+      }
+      .ib {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--bd);
+        background: var(--gl);
+        flex: none;
+        transition: transform 0.35s var(--ez);
+      }
+      .ib:hover {
+        transform: scale(1.1) rotate(8deg);
+      }
+      .ib:active {
+        transform: scale(0.88);
+      }
+      header {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font:
+          600 20px "Fredoka",system-ui,sans-serif;
+      }
+      .logo {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--a), var(--b));
+        box-shadow:
+          0 6px 20px rgba(157, 107, 255, 0.5),
+          inset 0 1px 0 rgba(255, 255, 255, 0.6);
+      }
+      .logo svg {
+        width: 26px;
+      }
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 0 20px 30px;
+      }
+      h1,
+      h2 {
+        font-family: "Wendy One", sans-serif;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+      h1 {
+        font-size: clamp(34px, 7vw, 58px);
+        line-height: 1.15;
+        margin: 0.2em 0;
+        background: linear-gradient(
+          100deg,
+          var(--a),
+          var(--b),
+          var(--c),
+          var(--a)
+        );
+        background-size: 250% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: sh 6s linear infinite;
+        filter: drop-shadow(0 0 14px rgba(255, 111, 194, 0.45));
+      }
+      @keyframes sh {
+        to {
+          background-position: 250% 0;
+        }
+      }
+      h2 {
+        margin: 0 0 14px;
+        font-size: 22px;
+        line-height: 1.25;
+      }
+      .hero {
+        text-align: center;
+        padding: 26px 0 26px;
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      .hero p {
+        color: var(--mut);
+        font-size: 17px;
+        margin: 8px 0 20px;
+      }
+      .pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+      }
+      .pill {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 9px 16px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .pill .ic {
+        width: 17px;
+        height: 17px;
+        color: var(--a);
+      }
+      .two {
+        display: grid;
+        gap: 20px;
+        grid-template-columns: 1fr;
+      }
+      @media (min-width: 900px) {
+        .two {
+          grid-template-columns: 1.1fr 1fr;
+          align-items: start;
+        }
+      }
+      .card {
+        padding: 26px;
+      }
+      .drop {
+        text-align: center;
+        padding: 36px 22px;
+        border: 1.5px dashed var(--bd);
+        transition:
+          transform 0.4s var(--ez),
+          border-color 0.3s;
+      }
+      .drop.on {
+        transform: scale(1.025);
+        border-color: var(--a);
+      }
+      .orb {
+        width: 84px;
+        height: 84px;
+        margin: 0 auto 14px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        background:
+          radial-gradient(circle at 30% 25%, #fff9, transparent 42%),
+          linear-gradient(135deg, var(--a), var(--b));
+        box-shadow:
+          0 0 44px rgba(255, 111, 194, 0.6),
+          inset 0 -6px 14px rgba(0, 0, 0, 0.12);
+        animation: ob 5s ease-in-out infinite;
+      }
+      .orb .ic {
+        width: 36px;
+        height: 36px;
+      }
+      @keyframes ob {
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+      .drop small {
+        display: block;
+        color: var(--mut);
+        margin-top: 12px;
+      }
+      .chk {
+        text-align: left;
+        margin: 18px 0 0;
+        display: grid;
+        gap: 8px;
+      }
+      .chk div {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        font-weight: 700;
+        animation: in 0.4s var(--ez) backwards;
+      }
+      .chk .ic {
+        color: var(--ok);
+      }
+      .err {
+        margin-top: 14px;
+        padding: 12px 16px;
+        border-radius: 16px;
+        background: rgba(229, 72, 77, 0.14);
+        border: 1px solid rgba(229, 72, 77, 0.4);
+        text-align: left;
+      }
+      .st {
+        border-radius: 18px;
+        border: 1px solid var(--bd);
+        background: var(--gl);
+        margin-bottom: 10px;
+        overflow: hidden;
+        transition: box-shadow 0.3s;
+      }
+      .st[open] {
+        box-shadow: 0 6px 20px var(--sh);
+      }
+      .st summary {
+        list-style: none;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 14px;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .st summary::-webkit-details-marker {
+        display: none;
+      }
+      .st summary b {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 13px;
+        color: #fff;
+        background: linear-gradient(135deg, var(--a), var(--b));
+        flex: none;
+      }
+      .st p {
+        margin: 0;
+        padding: 0 14px 14px 56px;
+        color: var(--mut);
+      }
+      .note {
+        color: var(--mut);
+        font-size: 13px;
+        margin: 12px 0 0;
+      }
+      #app {
+        display: none;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 20px 30px;
+        gap: 22px;
+      }
+      #app.on {
+        display: flex;
+      }
+      .side {
+        width: 240px;
+        flex: none;
+        padding: 14px;
+        position: sticky;
+        top: 16px;
+        align-self: flex-start;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .nv {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        border: 1px solid transparent;
+        background: none;
+        font-weight: 700;
+        text-align: left;
+        color: var(--mut);
+        transition: all 0.3s var(--ez);
+      }
+      .nv:hover {
+        color: var(--tx);
+        transform: translateX(3px);
+      }
+      .nv:active {
+        transform: scale(0.96);
+      }
+      .nv.on {
+        color: var(--tx);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 111, 194, 0.3),
+          rgba(157, 107, 255, 0.3)
+        );
+        border-color: var(--bd);
+        box-shadow:
+          0 0 22px rgba(255, 111, 194, 0.35),
+          inset 0 1px 0 var(--hi);
+      }
+      .nv em {
+        margin-left: auto;
+        font-style: normal;
+        font-size: 12px;
+        opacity: 0.8;
+      }
+      #main {
+        flex: 1;
+        min-width: 0;
+        max-width: 900px;
+      }
+      #main > * {
+        animation: in 0.5s ease backwards;
+      }
+      @keyframes in {
+        from {
+          opacity: 0;
+          transform: translateY(10px) scale(0.98);
+        }
+      }
+      @media (max-width: 899px) {
+        #app.on {
+          display: block;
+          padding-bottom: 96px;
+        }
+        .side {
+          position: fixed;
+          left: 10px;
+          right: 10px;
+          bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+          width: auto;
+          z-index: 20;
+          flex-direction: row;
+          overflow-x: auto;
+          padding: 6px;
+          border-radius: 24px;
+          gap: 2px;
+        }
+        .side .nv {
+          flex-direction: column;
+          gap: 2px;
+          padding: 8px 10px;
+          font-size: 10.5px;
+          min-width: 64px;
+          align-items: center;
+          white-space: nowrap;
+        }
+        .nv em,
+        .side .sep {
+          display: none;
+        }
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+      @media (min-width: 700px) {
+        .stats {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .stat {
+        padding: 18px;
+        transition: transform 0.4s var(--ez);
+      }
+      .stat:hover {
+        transform: translateY(-4px);
+      }
+      .stat span {
+        color: var(--mut);
+        font-size: 13px;
+        font-weight: 700;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .stat b {
+        display: block;
+        font-size: clamp(26px, 5vw, 34px);
+        margin-top: 6px;
+      }
+      .stat:nth-child(odd) .ic {
+        color: var(--a);
+      }
+      .stat:nth-child(even) .ic {
+        color: var(--b);
+      }
+      .sec {
+        margin-top: 22px;
+      }
+      .chg {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      @media (min-width: 700px) {
+        .chg {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .chg button {
+        padding: 14px;
+        text-align: left;
+        border-radius: 20px;
+        border: 1px solid var(--bd);
+        background: var(--gl);
+        font-weight: 700;
+        transition: transform 0.35s var(--ez);
+      }
+      .chg button:hover {
+        transform: translateY(-3px);
+      }
+      .chg button:active {
+        transform: scale(0.95);
+      }
+      .chg b {
+        font-size: 21px;
+        display: block;
+      }
+      .chg span {
+        font-size: 12px;
+        color: var(--mut);
+      }
+      .up {
+        color: var(--ok);
+      }
+      .dn {
+        color: var(--er);
+      }
+      .bar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+      }
+      .search {
+        flex: 1 1 220px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 0 16px;
+        min-height: 48px;
+        border-radius: 999px;
+      }
+      .search input {
+        flex: 1;
+        min-width: 0;
+        background: none;
+        border: 0;
+        outline: 0;
+      }
+      .search input::placeholder {
+        color: var(--mut);
+      }
+      select {
+        min-height: 48px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1px solid var(--bd);
+        background: var(--gl);
+        backdrop-filter: blur(14px);
+      }
+      select option {
+        color: #222;
+      }
+      .chips {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        margin-bottom: 10px;
+      }
+      .chip {
+        white-space: nowrap;
+        min-height: 38px;
+        padding: 0 16px;
+        border-radius: 999px;
+        border: 1px solid var(--bd);
+        background: var(--gl);
+        font-weight: 700;
+        font-size: 13px;
+        transition:
+          transform 0.3s var(--ez),
+          background 0.3s;
+      }
+      .chip:active {
+        transform: scale(0.92);
+      }
+      .chip.on {
+        background: linear-gradient(135deg, var(--a), var(--b));
+        color: #fff;
+        border-color: transparent;
+        box-shadow: 0 4px 16px rgba(255, 111, 194, 0.5);
+      }
+      .meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 6px 2px 12px;
+        color: var(--mut);
+        font-size: 13px;
+        font-weight: 700;
+      }
+      .meta div {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .rows {
+        display: grid;
+        gap: 12px;
+      }
+      @media (min-width: 1100px) {
+        .rows {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .row {
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border-radius: 22px;
+        flex-wrap: wrap;
+        transition: transform 0.3s var(--ez);
+      }
+      .row:hover {
+        transform: translateY(-2px);
+      }
+      .who {
+        flex: 1 1 140px;
+        min-width: 0;
+      }
+      .who b {
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .who small {
+        color: var(--mut);
+      }
+      .av {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        font-weight: 700;
+        flex: none;
+        background: linear-gradient(135deg, var(--a), var(--b));
+      }
+      .row input {
+        width: 22px;
+        height: 22px;
+        accent-color: var(--a);
+        flex: none;
+      }
+      .sel {
+        position: fixed;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+        z-index: 25;
+        display: none;
+        align-items: center;
+        gap: 14px;
+        padding: 10px 12px 10px 20px;
+        border-radius: 999px;
+        width: max-content;
+        max-width: calc(100% - 20px);
+      }
+      .sel.on {
+        display: flex;
+        animation: pop 0.4s var(--ez);
+      }
+      @media (min-width: 900px) {
+        .sel {
+          bottom: 28px;
+        }
+      }
+      @keyframes pop {
+        from {
+          opacity: 0;
+          transform: translate(-50%, 16px);
+        }
+      }
+      .empty {
+        padding: 36px 22px;
+        text-align: center;
+        color: var(--mut);
+      }
+      .empty .orb {
+        width: 64px;
+        height: 64px;
+        animation: none;
+        opacity: 0.85;
+      }
+      .empty .orb .ic {
+        width: 28px;
+        height: 28px;
+      }
+      .hist {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 18px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+        border-radius: 22px;
+      }
+      .hist .who span {
+        margin-right: 12px;
+        color: var(--mut);
+        font-size: 13px;
+      }
+      .hist.cur {
+        box-shadow:
+          0 0 0 2px var(--a),
+          0 12px 40px var(--sh);
+      }
+      svg.ch {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      #ld {
+        position: fixed;
+        inset: 0;
+        z-index: 50;
+        display: none;
+        place-items: center;
+        background: rgba(40, 10, 70, 0.35);
+        backdrop-filter: blur(8px);
+      }
+      #ld.on {
+        display: grid;
+      }
+      #ld > div {
+        padding: 28px 34px;
+        text-align: center;
+        font-weight: 700;
+      }
+      .spin {
+        width: 44px;
+        height: 44px;
+        margin: 0 auto 14px;
+        border-radius: 50%;
+        border: 4px solid var(--bd);
+        border-top-color: var(--a);
+        animation: sp 0.8s linear infinite;
+      }
+      @keyframes sp {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      #toasts {
+        position: fixed;
+        top: calc(16px + env(safe-area-inset-top, 0px));
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 60;
+        display: grid;
+        gap: 8px;
+        width: max-content;
+        max-width: calc(100% - 24px);
+      }
+      .toast {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        padding: 12px 18px;
+        border-radius: 999px;
+        font-weight: 700;
+        animation: in 0.45s var(--ez);
+      }
+      .toast .ic {
+        color: var(--ok);
+      }
+      footer {
+        text-align: center;
+        padding: 10px 20px 30px;
+        color: var(--mut);
+        font-size: 13px;
+      }
+      .hide {
+        display: none !important;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ff8fd2" />
+          <stop offset="1" stop-color="#9d6bff" />
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="aur" id="aur"><i></i><i></i><i></i></div>
+    <header>
+      <div class="brand">
+        <div class="logo" id="lg"></div>
+        Unfollow Checker
+      </div>
+      <button class="ib" id="tm" aria-label="Ganti tema"></button>
+    </header>
+
+    <main id="land" class="wrap">
+      <section class="hero">
+        <h1>Cek siapa yang unfollow di Instagram.</h1>
+        <p>
+          Upload data Instagram kamu untuk melihat perubahan followers dan siapa
+          yang tidak follow balik.
+        </p>
+        <div class="pills">
+          <span class="pill g" id="p1"></span
+          ><span class="pill g" id="p2"></span>
+        </div>
+      </section>
+      <div class="two">
+        <section class="g card drop" id="drop">
+          <div class="orb" id="ob"></div>
+          <h2>Upload Data Instagram</h2>
+          <p style="margin: 0 0 16px; color: var(--mut)">
+            Tarik file ke sini atau
+          </p>
+          <label class="btn p" tabindex="0" id="pick"
+            >Pilih File<input
+              type="file"
+              id="fi"
+              accept=".zip,.json,application/zip,application/json"
+              multiple
+              hidden
+          /></label>
+          <small>ZIP atau JSON</small>
+          <div class="chk" id="chk"></div>
+          <div class="err hide" id="err" role="alert"></div>
+          <div
+            style="
+              display: flex;
+              gap: 10px;
+              flex-wrap: wrap;
+              justify-content: center;
+              margin-top: 18px;
+            "
+          >
+            <button class="btn p hide" id="go">Mulai Analisis</button>
+            <button class="btn hide" id="resume">Buka scan terakhir</button>
+          </div>
+        </section>
+        <section class="g card">
+          <h2>Cara mendapatkan data Instagram</h2>
+          <div id="steps"></div>
+          <p class="note" style="margin-top: 4px">
+            Gunakan format JSON agar data dapat diproses dengan lebih mudah.
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <div id="app">
+      <aside class="side g" id="nav"></aside>
+      <section id="main"></section>
+    </div>
+    <div class="sel g" id="sel">
+      <span id="selc"></span
+      ><button class="btn p sm" data-a="opensel">Buka Profil Terpilih</button>
+    </div>
+    <div id="ld">
+      <div class="g">
+        <div class="spin"></div>
+        <span id="ldt">Membaca data Instagram...</span>
+      </div>
+    </div>
+    <div id="toasts"></div>
+    <footer>© 2026 by Nabila</footer>
+
+    <script>
+      const $ = (s) => document.querySelector(s),
+        N = (n) => n.toLocaleString("id-ID");
+      const P = {
+        home: '<path d="M3 11l9-8 9 8v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/>',
+        unf: '<circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 8l5 5m0-5l-5 5"/>',
+        nb: '<path d="M17 3l4 4-4 4M21 7H8M7 21l-4-4 4-4M3 17h13"/>',
+        mu: '<circle cx="9" cy="8" r="3.5"/><path d="M2 20a7 7 0 0 1 14 0"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14a5 5 0 0 1 5 5"/>',
+        fo: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+        fg: '<circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 11l2 2 4-4"/>',
+        hi: '<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5M12 7v5l3 2"/>',
+        up: '<path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>',
+        se: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+        su: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+        mo: '<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',
+        ex: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+        cp: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',
+        dl: '<path d="M12 4v12M7 11l5 5 5-5M4 20h16"/>',
+        ck: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+        sh: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+        lk: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+        tr: '<path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/>',
+      };
+      const ic = (n) =>
+        `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n]}</svg>`;
+      const WING =
+        "M20 16C14 2 2 0 2 9c0 6 6 9 18 7zM20 16C12 17 6 24 10 29c5 3 9-6 10-13z";
+      const bfly = (f, anim) =>
+        `<svg viewBox="0 0 40 32" aria-hidden="true"><g class="${anim ? "w" : ""}"><path d="${WING}" fill="${f}"/></g><g class="${anim ? "w r" : ""}"><g transform="translate(40 0) scale(-1 1)"><path d="${WING}" fill="${f}"/></g></g><rect x="19" y="9" width="2" height="17" rx="1" fill="#6b3fa0"/></svg>`;
+
+      const SK = "iuc.scans",
+        TK = "iuc.theme";
+      let scans = [],
+        sel = 0,
+        tab = "home",
+        chip = "unf",
+        cur = null,
+        pend = null,
+        C = null;
+      try {
+        scans = JSON.parse(localStorage.getItem(SK) || "[]");
+      } catch (e) {
+        scans = [];
+      }
+      const fmtD = (t) =>
+        new Date(t).toLocaleDateString("id-ID", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        });
+      function toast(m) {
+        const t = document.createElement("div");
+        t.className = "toast g";
+        t.innerHTML = ic("ck") + m;
+        $("#toasts").append(t);
+        setTimeout(() => t.remove(), 2600);
+      }
+      const tick = () => new Promise((r) => setTimeout(r, 30));
+      async function busy(m) {
+        $("#ldt").textContent = m;
+        $("#ld").classList.add("on");
+        await tick();
+      }
+      const idle = () => $("#ld").classList.remove("on");
+
+      /* tema */
+      const isDark = () =>
+        document.documentElement.dataset.theme
+          ? document.documentElement.dataset.theme === "dark"
+          : matchMedia("(prefers-color-scheme:dark)").matches;
+      function theme(t) {
+        if (t) document.documentElement.dataset.theme = t;
+        $("#tm").innerHTML = ic(isDark() ? "su" : "mo");
+      }
+      try {
+        theme(localStorage.getItem(TK));
+      } catch (e) {
+        theme();
+      }
+      $("#tm").onclick = () => {
+        const n = isDark() ? "light" : "dark";
+        theme(n);
+        try {
+          localStorage.setItem(TK, n);
+        } catch (e) {}
+      };
+
+      /* dekorasi: kupu-kupu & bintang */
+      (function () {
+        let h = "";
+        [
+          [8, 70, 46, 26],
+          [70, 15, 38, 32],
+          [25, 35, 30, 22],
+          [82, 60, 54, 30],
+          [45, 80, 34, 28],
+        ].forEach((b, i) => {
+          h += `<div class="bf" style="left:${b[0]}%;top:${b[1]}%;--s:${b[2]}px;--t:${b[3]}s;animation-delay:-${i * 5}s">${bfly(i % 2 ? "url(#bg)" : "#ffb3e1", true)}</div>`;
+        });
+        for (let i = 0; i < 18; i++)
+          h += `<i class="tw" style="left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation-delay:-${(Math.random() * 3.5).toFixed(2)}s"></i>`;
+        $("#aur").insertAdjacentHTML("beforeend", h);
+      })();
+      document.addEventListener("pointerdown", (e) => {
+        for (let i = 0; i < 7; i++) {
+          const s = document.createElement("i"),
+            a = (Math.PI * 2 * i) / 7,
+            d = 22 + Math.random() * 22;
+          s.className = "sp";
+          s.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;--x:${Math.cos(a) * d}px;--y:${Math.sin(a) * d}px`;
+          document.body.append(s);
+          setTimeout(() => s.remove(), 700);
+        }
+      });
+
+      /* UI statis */
+      $("#lg").innerHTML = bfly("#fff", false);
+      $("#p1").innerHTML = ic("sh") + "Tidak perlu login Instagram.";
+      $("#p2").innerHTML =
+        ic("lk") + "Data kamu diproses langsung di perangkat.";
+      $("#ob").innerHTML = ic("up");
+      const STEPS = [
+        ["Buka Instagram", "Masuk ke Profil → Menu → Pusat Akun."],
+        ["Informasi dan izin Anda", "Masuk ke bagian Informasi dan izin Anda."],
+        ["Unduh informasi Anda", "Pilih Unduh informasi Anda."],
+        ["Pilih akun", "Pilih akun Instagram yang ingin diperiksa."],
+        ["Pilih data", "Pilih data yang diperlukan untuk followers/following."],
+        ["Pilih format JSON", "Pilih format JSON."],
+        [
+          "Download file",
+          "Download file ketika data sudah tersedia, lalu upload file ZIP/JSON ke website ini.",
+        ],
+      ];
+      $("#steps").innerHTML = STEPS.map(
+        (s, i) =>
+          `<details class="st"${matchMedia("(min-width:900px)").matches ? " open" : ""}><summary><b>${i + 1}</b>${s[0]}</summary><p>${s[1]}</p></details>`,
+      ).join("");
+      if (scans.length) $("#resume").classList.remove("hide");
+
+      /* parser */
+      const norm = (v) => {
+        if (typeof v !== "string") return null;
+        v = v.trim().toLowerCase();
+        const m = v.match(/instagram\.com\/(?:_u\/)?([^\/?#\s]+)/);
+        if (m) v = m[1];
+        v = v.replace(/^@/, "");
+        return /^[a-z0-9._]{1,30}$/.test(v) ? v : null;
+      };
+      function extract(j, out) {
+        if (Array.isArray(j)) j.forEach((x) => extract(x, out));
+        else if (j && typeof j === "object") {
+          if (Array.isArray(j.string_list_data)) {
+            for (const s of j.string_list_data) {
+              const u =
+                norm(s && s.value) || norm(s && s.href) || norm(j.title);
+              if (u) out.add(u);
+            }
+          } else Object.values(j).forEach((x) => extract(x, out));
+        }
+        return out;
+      }
+      /* Deteksi jenis file dari nama file (fleksibel) lalu dari isi JSON. */
+      const SKIP =
+        /pending|recent|request|unfollow|block|close_friend|restrict|hashtag|story|suggest|dismiss/;
+      function kind(base, j, loose) {
+        if (SKIP.test(base)) return null;
+        if (/following/.test(base)) return "g";
+        if (/follower/.test(base)) return "f";
+        if (j && !Array.isArray(j)) {
+          if (j.relationships_following) return "g";
+          if (j.relationships_followers) return "f";
+        }
+        return loose && Array.isArray(j) ? "f" : null;
+      }
+      async function readFiles(files) {
+        const R = { f: new Set(), g: new Set(), hf: false, hg: false };
+        const add = (base, text, loose) => {
+          let j;
+          try {
+            j = JSON.parse(text);
+          } catch (e) {
+            throw new Error("json");
+          }
+          const k = kind(base, j, loose);
+          if (k === "f") {
+            R.hf = true;
+            extract(j, R.f);
+          } else if (k === "g") {
+            R.hg = true;
+            extract(j, R.g);
+          }
+        };
+        for (const f of files) {
+          const n = f.name.toLowerCase();
+          if (n.endsWith(".zip")) {
+            if (typeof JSZip === "undefined") throw new Error("lib");
+            let z;
+            try {
+              z = await JSZip.loadAsync(f);
+            } catch (e) {
+              throw new Error("type");
+            }
+            for (const e of Object.values(z.files)) {
+              const p = e.name.toLowerCase();
+              if (e.dir || !p.endsWith(".json") || !p.includes("follow"))
+                continue;
+              add(p.split("/").pop(), await e.async("string"), false);
+            }
+          } else if (n.endsWith(".json")) add(n, await f.text(), true);
+          else throw new Error("type");
+        }
+        return R;
+      }
+      const MSG = {
+        type: "File tidak dapat diproses. Upload file ZIP atau JSON dari data Instagram kamu.",
+        json: "File JSON tidak dapat dibaca. Coba download ulang data Instagram kamu.",
+        nodata: "Data followers atau following tidak ditemukan.",
+        lib: "Pembaca ZIP belum termuat. Periksa koneksi internet lalu muat ulang halaman.",
+      };
+      function showErr(m) {
+        const e = $("#err");
+        e.textContent = m;
+        e.classList.remove("hide");
+        $("#chk").innerHTML = "";
+        $("#go").classList.add("hide");
+      }
+      async function onFiles(fs) {
+        fs = [...fs];
+        if (!fs.length) return;
+        pend = null;
+        $("#err").classList.add("hide");
+        $("#go").classList.add("hide");
+        await busy("Membaca data Instagram...");
+        try {
+          const R = await readFiles(fs);
+          idle();
+          if (!R.hf || !R.hg || !R.f.size || !R.g.size) {
+            showErr(MSG.nodata);
+            return;
+          }
+          pend = R;
+          $("#chk").innerHTML =
+            `<div>${ic("ck")}File berhasil dibaca</div><div>${ic("ck")}Data followers ditemukan (${N(R.f.size)})</div><div>${ic("ck")}Data following ditemukan (${N(R.g.size)})</div>`;
+          $("#go").classList.remove("hide");
+        } catch (e) {
+          idle();
+          showErr(MSG[e.message] || MSG.type);
+        }
+      }
+      $("#fi").onchange = (e) => {
+        onFiles(e.target.files);
+        e.target.value = "";
+      };
+      $("#pick").onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          $("#fi").click();
+        }
+      };
+      const dz = $("#drop");
+      ["dragenter", "dragover"].forEach((t) =>
+        dz.addEventListener(t, (e) => {
+          e.preventDefault();
+          dz.classList.add("on");
+        }),
+      );
+      ["dragleave", "drop"].forEach((t) =>
+        dz.addEventListener(t, (e) => {
+          e.preventDefault();
+          dz.classList.remove("on");
+        }),
+      );
+      dz.addEventListener("drop", (e) => onFiles(e.dataTransfer.files));
+
+      function persist() {
+        try {
+          localStorage.setItem(SK, JSON.stringify(scans));
+          return true;
+        } catch (e) {
+          toast(
+            "Riwayat tidak dapat disimpan. Coba hapus scan lama dari menu Riwayat.",
+          );
+          return false;
+        }
+      }
+      $("#go").onclick = async () => {
+        if (!pend) return;
+        await busy("Menganalisis followers...");
+        const s = {
+          id: Date.now(),
+          date: Date.now(),
+          followers: [...pend.f].sort(),
+          following: [...pend.g].sort(),
+        };
+        scans.push(s);
+        scans.sort((a, b) => a.date - b.date);
+        await busy("Menyiapkan hasil...");
+        const ok = persist();
+        pend = null;
+        idle();
+        openApp(
+          scans.findIndex((x) => x.id === s.id),
+          ok ? "File berhasil dianalisis." : null,
+        );
+      };
+      $("#resume").onclick = () => openApp(scans.length - 1);
+
+      /* hitung */
+      const sub = (a, b) => [...a].filter((x) => !b.has(x));
+      function calc(i) {
+        const s = scans[i],
+          F = new Set(s.followers),
+          G = new Set(s.following);
+        const o = {
+          F,
+          G,
+          mutual: [...G].filter((x) => F.has(x)),
+          notback: sub(G, F),
+          fans: sub(F, G),
+        };
+        if (i > 0) {
+          const p = scans[i - 1],
+            pF = new Set(p.followers),
+            pG = new Set(p.following);
+          o.unf = sub(pF, F);
+          o.newF = sub(F, pF);
+          o.unfg = sub(pG, G);
+          o.newG = sub(G, pG);
+        }
+        return o;
+      }
+      function openApp(i, msg) {
+        sel = i;
+        C = calc(i);
+        $("#land").classList.add("hide");
+        $("#app").classList.add("on");
+        tab = "home";
+        nav();
+        render();
+        scrollTo(0, 0);
+        if (msg) toast(msg);
+      }
+      const TABS = [
+        ["home", "Ringkasan", "home"],
+        ["unf", "Unfollow", "unf"],
+        ["nb", "Tidak Follow Balik", "nb"],
+        ["mu", "Mutual", "mu"],
+        ["fo", "Followers", "fo"],
+        ["fg", "Following", "fg"],
+        ["hi", "Riwayat", "hi"],
+      ];
+      function nav() {
+        const cnt = {
+          unf: C.unf && C.unf.length,
+          nb: C.notback.length,
+          mu: C.mutual.length,
+          fo: C.F.size,
+          fg: C.G.size,
+        };
+        $("#nav").innerHTML =
+          TABS.map(
+            (t) =>
+              `<button class="nv${tab === t[0] ? " on" : ""}" data-a="tab" data-v="${t[0]}">${ic(t[2])}<span>${t[1]}</span>${cnt[t[0]] != null ? `<em>${N(cnt[t[0]])}</em>` : ""}</button>`,
+          ).join("") +
+          `<button class="nv sep" data-a="new" style="margin-top:8px">${ic("up")}<span>Scan baru</span></button>`;
+      }
+      const empty = (t, i = "ck") =>
+        `<div class="g empty"><div class="orb">${ic(i)}</div>${t}</div>`;
+      const LST = {
+        nb: [
+          "Tidak Follow Balik",
+          (c) => c.notback,
+          "not_following_back",
+          "Tidak mengikuti kamu kembali",
+          "Semua akun yang kamu ikuti saat ini juga mengikuti kamu.",
+        ],
+        mu: [
+          "Mutual",
+          (c) => c.mutual,
+          "mutual",
+          "Saling mengikuti",
+          "Belum ada akun mutual.",
+        ],
+        fo: [
+          "Followers",
+          (c) => [...c.F],
+          "follower",
+          "Mengikuti kamu",
+          "Belum ada data followers.",
+        ],
+        fg: [
+          "Following",
+          (c) => [...c.G],
+          "following",
+          "Kamu ikuti",
+          "Belum ada data following.",
+        ],
+      };
+      const CH = {
+        unf: [
+          "Berhenti mengikuti",
+          "unfollowed",
+          "Terindikasi berhenti mengikuti kamu",
+          "Belum ada akun yang terdeteksi berhenti mengikuti kamu.",
+        ],
+        newF: [
+          "Mulai mengikuti",
+          "new_follower",
+          "Mulai mengikuti kamu",
+          "Belum ada akun baru yang mengikuti kamu sejak scan sebelumnya.",
+        ],
+        unfg: [
+          "Kamu berhenti mengikuti",
+          "you_unfollowed",
+          "Kamu berhenti mengikuti",
+          "Tidak ada akun yang berhenti kamu ikuti.",
+        ],
+        newG: [
+          "Kamu mulai mengikuti",
+          "you_followed",
+          "Kamu mulai mengikuti",
+          "Tidak ada akun baru yang kamu ikuti.",
+        ],
+      };
+      function render() {
+        const m = $("#main");
+        $("#sel").classList.remove("on");
+        cur = null;
+        if (tab === "home") m.innerHTML = home();
+        else if (tab === "hi") m.innerHTML = hist();
+        else if (tab === "unf") {
+          if (!C.unf) {
+            m.innerHTML =
+              `<h2>Unfollow</h2>` +
+              empty(
+                "Belum ada riwayat scan untuk mendeteksi akun yang berhenti mengikuti kamu.",
+                "hi",
+              );
+            return;
+          }
+          const d = CH[chip];
+          m.innerHTML =
+            `<h2>Unfollow</h2><div class="chips">${Object.keys(CH)
+              .map(
+                (k) =>
+                  `<button class="chip${k === chip ? " on" : ""}" data-a="chip" data-v="${k}">${CH[k][0]} (${N(C[k].length)})</button>`,
+              )
+              .join("")}</div>` +
+            shell(C[chip], d[1], d[2], d[3]) +
+            `<p class="note">Hasil berdasarkan perbandingan data antar scan, jadi sifatnya indikasi dan bisa berbeda dari kondisi sebenarnya.</p>`;
+          paint();
+        } else {
+          const L = LST[tab];
+          m.innerHTML = `<h2>${L[0]}</h2>` + shell(L[1](C), L[2], L[3], L[4]);
+          paint();
+        }
+        if (tab === "home") count();
+      }
+      function count() {
+        document.querySelectorAll("[data-n]").forEach((el) => {
+          const t = +el.dataset.n,
+            s = performance.now();
+          (function f(n) {
+            const p = Math.min(1, (n - s) / 900);
+            el.textContent = N(Math.round(t * (1 - Math.pow(1 - p, 3))));
+            if (p < 1) requestAnimationFrame(f);
+          })(s);
+        });
+      }
+      function home() {
+        const st = [
+          ["Followers", C.F.size, "fo"],
+          ["Following", C.G.size, "fg"],
+          ["Mutual", C.mutual.length, "mu"],
+          ["Tidak Follow Balik", C.notback.length, "nb"],
+        ];
+        let h = `<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px"><h2 style="margin:0">Ringkasan Instagram</h2><span style="color:var(--mut);font-size:13px;font-weight:700">Scan ${fmtD(scans[sel].date)}</span></div><div class="stats">${st.map((s) => `<div class="g stat"><span>${ic(s[2])}${s[0]}</span><b data-n="${s[1]}">0</b></div>`).join("")}</div>`;
+        h += `<div class="sec"><h2>Perubahan sejak scan terakhir</h2>`;
+        if (!C.unf)
+          h += `<div class="g empty">Belum ada scan sebelumnya untuk dibandingkan.<br>Belum ada riwayat scan untuk mendeteksi akun yang berhenti mengikuti kamu.</div>`;
+        else
+          h += `<div class="chg">${[
+            ["unf", "dn", "↓", " Followers"],
+            ["newF", "up", "↑", " Followers"],
+            ["unfg", "dn", "↓", " Following"],
+            ["newG", "up", "↑", " Following"],
+          ]
+            .map(
+              (c) =>
+                `<button class="g" data-a="gochip" data-v="${c[0]}"><b class="${c[1]}">${c[2]} ${N(C[c[0]].length)}${c[3]}</b><span>${CH[c[0]][0]}</span></button>`,
+            )
+            .join("")}</div>`;
+        h += `</div><div class="sec"><h2>Perkembangan followers</h2><div class="g card">${chart()}</div></div>`;
+        h += `<div class="sec"><h2>Export</h2><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" data-a="expall" data-v="csv">${ic("dl")}Export CSV</button><button class="btn" data-a="expall" data-v="txt">${ic("dl")}Export TXT</button></div></div>`;
+        return h;
+      }
+      function chart() {
+        const a = scans.slice(-12);
+        if (a.length < 2)
+          return `<div class="empty" style="padding:20px">Lakukan scan berikutnya untuk melihat perkembangan followers.</div>`;
+        const v = a.map((s) => s.followers.length),
+          mn = Math.min(...v),
+          mx = Math.max(...v),
+          r = mx - mn || 1,
+          W = 600,
+          H = 200;
+        const px = (i) => 40 + (i * (W - 70)) / (a.length - 1),
+          py = (x) => 20 + (H - 60) * (1 - (x - mn) / r);
+        const pts = v.map((x, i) => `${px(i)},${py(x)}`).join(" ");
+        return `<svg class="ch" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#ff6fc2"/><stop offset="1" stop-color="#9d6bff"/></linearGradient><linearGradient id="ga" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6fc2" stop-opacity=".35"/><stop offset="1" stop-color="#9d6bff" stop-opacity="0"/></linearGradient></defs><polygon points="${px(0)},${H - 40} ${pts} ${px(a.length - 1)},${H - 40}" fill="url(#ga)"/><polyline points="${pts}" fill="none" stroke="url(#gl)" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>${v.map((x, i) => `<circle cx="${px(i)}" cy="${py(x)}" r="5" fill="#fff" stroke="#ff6fc2" stroke-width="2.5"/><text x="${px(i)}" y="${py(x) - 11}" text-anchor="middle" font-size="12" font-weight="700" fill="currentColor">${N(x)}</text><text x="${px(i)}" y="${H - 14}" text-anchor="middle" font-size="11" fill="currentColor" opacity=".65">${new Date(a[i].date).toLocaleDateString("id-ID", { day: "2-digit", month: "short" })}</text>`).join("")}</svg>`;
+      }
+      function hist() {
+        return (
+          `<h2>Riwayat</h2>` +
+          [...scans]
+            .map((s, i) => [s, i])
+            .reverse()
+            .map(
+              ([s, i]) =>
+                `<div class="g hist${i === sel ? " cur" : ""}"><div class="who"><b>${fmtD(s.date)}</b><span>${N(s.followers.length)} Followers</span><span>${N(s.following.length)} Following</span></div><button class="btn sm" data-a="open" data-v="${i}">Buka detail</button><button class="ib" data-a="del" data-v="${i}" aria-label="Hapus scan">${ic("tr")}</button></div>`,
+            )
+            .join("")
+        );
+      }
+      function shell(items, status, subt, emp) {
+        cur = {
+          items,
+          status,
+          subt,
+          emp,
+          q: "",
+          sort: "a",
+          lim: 60,
+          S: new Set(),
+        };
+        return `<div class="bar"><label class="g search">${ic("se")}<input id="q" placeholder="Cari username..." autocomplete="off" autocapitalize="off"></label><select id="so" aria-label="Urutkan"><option value="a">A–Z</option><option value="z">Z–A</option></select></div><div class="meta"><span id="cnt"></span><div><button class="chip" data-a="selall">Pilih semua</button><button class="chip" data-a="exp" data-v="csv">CSV</button><button class="chip" data-a="exp" data-v="txt">TXT</button></div></div><div id="items"></div>`;
+      }
+      function view() {
+        const a = cur.items.filter((u) => u.includes(cur.q)).sort();
+        if (cur.sort === "z") a.reverse();
+        return a;
+      }
+      function paint() {
+        const a = view(),
+          b = $("#items");
+        $("#cnt").textContent = `${N(a.length)} akun`;
+        if (!cur.items.length) {
+          b.innerHTML = empty(cur.emp);
+          selbar();
+          return;
+        }
+        if (!a.length) {
+          b.innerHTML = empty("Tidak ada username yang cocok.", "se");
+          selbar();
+          return;
+        }
+        b.innerHTML = `<div class="rows">${a
+          .slice(0, cur.lim)
+          .map(
+            (u) =>
+              `<div class="g row"><input type="checkbox" data-u="${u}" aria-label="Pilih ${u}"${cur.S.has(u) ? " checked" : ""}><div class="av">${u[0].toUpperCase()}</div><div class="who"><b>@${u}</b><small>${cur.subt}</small></div><button class="ib" data-a="copy" data-v="${u}" aria-label="Salin Username" title="Salin Username">${ic("cp")}</button><a class="btn sm" target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/${u}/">${ic("ex")}Lihat Profil Instagram</a></div>`,
+          )
+          .join(
+            "",
+          )}</div>${a.length > cur.lim ? `<div style="text-align:center;margin-top:16px"><button class="btn" data-a="more">Tampilkan lebih banyak</button></div>` : ""}`;
+        selbar();
+      }
+      function selbar() {
+        const n = cur ? cur.S.size : 0;
+        $("#sel").classList.toggle("on", n > 0);
+        $("#selc").textContent = `${n} akun dipilih`;
+      }
+      document.addEventListener("input", (e) => {
+        if (e.target.id === "q" && cur) {
+          cur.q = e.target.value.trim().toLowerCase().replace(/^@/, "");
+          cur.lim = 60;
+          paint();
+        }
+      });
+      document.addEventListener("change", (e) => {
+        if (e.target.id === "so" && cur) {
+          cur.sort = e.target.value;
+          paint();
+        } else if (e.target.dataset.u && cur) {
+          e.target.checked
+            ? cur.S.add(e.target.dataset.u)
+            : cur.S.delete(e.target.dataset.u);
+          selbar();
+        }
+      });
+
+      /* export */
+      const q = (s) => `"${String(s).replace(/"/g, '""')}"`;
+      async function save(name, text, mime) {
+        await busy("Menyiapkan hasil...");
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(new Blob([text], { type: mime }));
+        a.download = name;
+        document.body.append(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        idle();
+        toast("Data berhasil disimpan.");
+      }
+      function out(rows, fmt) {
+        const d = new Date().toISOString().slice(0, 10);
+        fmt === "csv"
+          ? save(
+              `unfollow-checker-${d}.csv`,
+              "username,status\n" +
+                rows.map((r) => r.map(q).join(",")).join("\n"),
+              "text/csv;charset=utf-8",
+            )
+          : save(
+              `unfollow-checker-${d}.txt`,
+              rows.map((r) => `${r[0]} - ${r[1]}`).join("\n"),
+              "text/plain;charset=utf-8",
+            );
+      }
+      document.addEventListener("click", async (e) => {
+        const b = e.target.closest("[data-a]");
+        if (!b) return;
+        const a = b.dataset.a,
+          v = b.dataset.v;
+        if (a === "tab") {
+          tab = v;
+          nav();
+          render();
+          scrollTo({ top: 0, behavior: "smooth" });
+        } else if (a === "chip") {
+          chip = v;
+          render();
+        } else if (a === "gochip") {
+          chip = v;
+          tab = "unf";
+          nav();
+          render();
+        } else if (a === "copy") {
+          try {
+            await navigator.clipboard.writeText(v);
+            toast("Username disalin.");
+          } catch (x) {
+            const t = document.createElement("textarea");
+            t.value = v;
+            document.body.append(t);
+            t.select();
+            try {
+              document.execCommand("copy");
+              toast("Username disalin.");
+            } catch (y) {}
+            t.remove();
+          }
+        } else if (a === "more") {
+          cur.lim += 60;
+          paint();
+        } else if (a === "selall") {
+          const x = view();
+          x.length && x.every((u) => cur.S.has(u))
+            ? cur.S.clear()
+            : x.forEach((u) => cur.S.add(u));
+          paint();
+        } else if (a === "opensel") {
+          let n = 0;
+          if (cur)
+            [...cur.S].forEach((u) => {
+              if (
+                window.open(
+                  `https://www.instagram.com/${u}/`,
+                  "_blank",
+                  "noopener",
+                )
+              )
+                n++;
+            });
+          if (cur && n < cur.S.size)
+            toast("Izinkan pop-up untuk membuka semua profil.");
+        } else if (a === "exp" && cur)
+          out(
+            cur.items.map((u) => [u, cur.status]),
+            v,
+          );
+        else if (a === "expall") {
+          const r = [];
+          C.mutual.forEach((u) => r.push([u, "mutual"]));
+          C.notback.forEach((u) => r.push([u, "not_following_back"]));
+          C.fans.forEach((u) => r.push([u, "you_not_following_back"]));
+          if (C.unf) C.unf.forEach((u) => r.push([u, "unfollowed"]));
+          out(r, v);
+        } else if (a === "open") openApp(+v);
+        else if (a === "del") {
+          scans.splice(+v, 1);
+          persist();
+          if (!scans.length) {
+            location.reload();
+            return;
+          }
+          sel = Math.min(sel, scans.length - 1);
+          C = calc(sel);
+          nav();
+          render();
+          toast("Scan dihapus.");
+        } else if (a === "new") {
+          $("#app").classList.remove("on");
+          $("#land").classList.remove("hide");
+          $("#sel").classList.remove("on");
+          $("#chk").innerHTML = "";
+          $("#go").classList.add("hide");
+          $("#resume").classList.toggle("hide", !scans.length);
+          scrollTo(0, 0);
+        }
+      });
+    </script>
+  </body>
+</html>
